@@ -1,16 +1,19 @@
 'use client';
 
 import { useNovelStore } from '@/store/novelStore';
+import { useSettingsStore } from '@/store/settingsStore';
 import Sidebar from '@/components/Sidebar';
 import WorldBuilder from '@/components/WorldBuilder';
 import CharacterSheet from '@/components/CharacterSheet';
 import ChapterGenerator from '@/components/ChapterGenerator';
 import EditingTools from '@/components/EditingTools';
 import ExportPanel from '@/components/ExportPanel';
+import SettingsPanel from '@/components/SettingsPanel';
 import { Sparkles } from 'lucide-react';
 
 export default function Home() {
   const { activeTab } = useNovelStore();
+  const { settings } = useSettingsStore();
 
   const renderContent = () => {
     switch (activeTab) {
@@ -24,6 +27,8 @@ export default function Home() {
         return <EditingTools />;
       case 'export':
         return <ExportPanel />;
+      case 'settings':
+        return <SettingsPanel />;
       default:
         return <WorldBuilder />;
     }
@@ -46,7 +51,7 @@ export default function Home() {
           </div>
           <div className="flex items-center gap-2">
             <span className="bg-indigo-900/50 text-indigo-300 text-xs px-3 py-1 rounded-full border border-indigo-700/50 font-medium">
-              GPT-4o Powered
+              {settings.aiModel.toUpperCase()} Powered
             </span>
           </div>
         </header>

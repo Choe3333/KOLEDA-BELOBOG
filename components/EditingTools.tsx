@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import { Edit3, Sparkles, Loader2, ArrowRight } from 'lucide-react';
+import { useApiSettings } from '@/lib/useApiSettings';
 
 export default function EditingTools() {
+  const apiSettings = useApiSettings();
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState('');
   const [activeType, setActiveType] = useState<'rewrite' | 'expand' | null>(null);
@@ -24,7 +26,7 @@ export default function EditingTools() {
       const res = await fetch('/api/edit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type, content: inputText }),
+        body: JSON.stringify({ type, content: inputText, ...apiSettings }),
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);

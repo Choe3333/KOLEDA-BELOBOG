@@ -3,9 +3,11 @@
 import { useState } from 'react';
 import { BookOpen, Plus, Sparkles, Loader2, Edit2, Trash2, Save, X } from 'lucide-react';
 import { useNovelStore } from '@/store/novelStore';
+import { useApiSettings } from '@/lib/useApiSettings';
 
 export default function ChapterGenerator() {
   const { chapters, addChapter, updateChapter, deleteChapter } = useNovelStore();
+  const apiSettings = useApiSettings();
   const [title, setTitle] = useState('');
   const [hints, setHints] = useState('');
   const [loading, setLoading] = useState(false);
@@ -33,6 +35,7 @@ export default function ChapterGenerator() {
           title: title || `Chapter ${chapters.length + 1}`,
           hints,
           previousChapters,
+          ...apiSettings,
         }),
       });
       const data = await res.json();

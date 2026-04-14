@@ -1,0 +1,21 @@
+appId: com.novelcraft.app
+productName: NovelCraft
+directories:
+  output: dist-electron
+files:
+  - electron/**/*
+extraResources:
+  - from: .next/standalone
+    to: standalone
+  - from: .next/static
+    to: standalone/.next/static
+  - from: public
+    to: standalone/public
+win:
+  target: portable
+  icon: public/favicon.ico
+mac:
+  target: dmg
+  icon: public/favicon.ico
+linux:
+  target: AppImage

@@ -3,12 +3,14 @@
 import { useState } from 'react';
 import { Globe, Sparkles, Loader2 } from 'lucide-react';
 import { useNovelStore } from '@/store/novelStore';
+import { useApiSettings } from '@/lib/useApiSettings';
 
 const genres = ['Fantasy', 'Sci-Fi', 'Romance', 'Mystery', 'Horror', 'Historical'];
 const tones = ['Dark', 'Light', 'Epic', 'Romantic', 'Thriller'];
 
 export default function WorldBuilder() {
   const { worldSetting, setWorldSetting } = useNovelStore();
+  const apiSettings = useApiSettings();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -24,6 +26,7 @@ export default function WorldBuilder() {
           genre: worldSetting.genre || 'Fantasy',
           tone: worldSetting.tone || 'Epic',
           background: worldSetting.background,
+          ...apiSettings,
         }),
       });
       const data = await res.json();
