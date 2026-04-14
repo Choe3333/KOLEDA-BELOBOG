@@ -23,7 +23,7 @@ export interface Chapter {
   order: number;
 }
 
-type ActiveTab = 'world' | 'characters' | 'chapters' | 'edit' | 'export';
+type ActiveTab = 'world' | 'characters' | 'chapters' | 'edit' | 'export' | 'settings';
 
 interface NovelStore {
   worldSetting: WorldSetting;

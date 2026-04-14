@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Users, Plus, Edit2, Trash2, Sparkles, Loader2, X } from 'lucide-react';
 import { useNovelStore, Character } from '@/store/novelStore';
+import { useApiSettings } from '@/lib/useApiSettings';
 
 const emptyChar: Omit<Character, 'id'> = {
   name: '',
@@ -13,6 +14,7 @@ const emptyChar: Omit<Character, 'id'> = {
 
 export default function CharacterSheet() {
   const { characters, addCharacter, updateCharacter, deleteCharacter } = useNovelStore();
+  const apiSettings = useApiSettings();
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState(emptyChar);
@@ -53,7 +55,7 @@ export default function CharacterSheet() {
       const res = await fetch('/api/character', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: formData.name, traits: formData.personality }),
+        body: JSON.stringify({ name: formData.name, traits: formData.personality, ...apiSettings }),
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);

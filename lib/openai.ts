@@ -1,18 +1,26 @@
 import OpenAI from 'openai';
 
-const getOpenAIClient = () => {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
+interface GenerateOptions {
+  apiKey?: string;
+  model?: string;
+  temperature?: number;
+  maxTokens?: number;
+}
+
+const getOpenAIClient = (apiKey?: string) => {
+  const key = apiKey || process.env.OPENAI_API_KEY;
+  if (!key) {
     return null;
   }
-  return new OpenAI({ apiKey });
+  return new OpenAI({ apiKey: key });
 };
 
 export async function generateWithOpenAI(
   systemPrompt: string,
-  userPrompt: string
+  userPrompt: string,
+  options: GenerateOptions = {}
 ): Promise<string> {
-  const client = getOpenAIClient();
+  const client = getOpenAIClient(options.apiKey);
 
   if (!client) {
     return getDemoContent(userPrompt);
@@ -20,13 +28,13 @@ export async function generateWithOpenAI(
 
   try {
     const response = await client.chat.completions.create({
-      model: 'gpt-4o',
+      model: options.model || 'gpt-4o',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
       ],
-      max_tokens: 1500,
-      temperature: 0.8,
+      max_tokens: options.maxTokens || 1500,
+      temperature: options.temperature ?? 0.8,
     });
 
     return response.choices[0]?.message?.content ?? 'No content generated.';

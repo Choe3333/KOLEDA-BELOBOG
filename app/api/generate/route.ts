@@ -4,12 +4,17 @@ import { generateWithOpenAI } from '@/lib/openai';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { type, genre, tone, background, title, hints, previousChapters } = body;
+    const { type, genre, tone, background, title, hints, previousChapters, apiKey, model, temperature, maxTokens, language } = body;
+
+    const generateOptions = { apiKey, model, temperature, maxTokens };
+    const langInstruction = language && language !== 'en'
+      ? `\n\nIMPORTANT: Write your response in ${language === 'ko' ? 'Korean' : language === 'ja' ? 'Japanese' : language === 'zh' ? 'Chinese' : language}.`
+      : '';
 
     if (type === 'world') {
       const systemPrompt = `You are a creative writing assistant specializing in world-building for novels. 
 Create rich, detailed, and immersive world settings. Your output should be well-structured with sections 
-for World Overview, History & Lore, Social Structure, and unique elements (Magic/Technology/etc.).`;
+for World Overview, History & Lore, Social Structure, and unique elements (Magic/Technology/etc.).${langInstruction}`;
 
       const userPrompt = `Create a detailed world setting for a ${genre} novel with a ${tone} tone.
 ${background ? `Additional context: ${background}` : ''}
@@ -21,14 +26,14 @@ Please provide:
 4. Unique Elements (magic system, technology, special rules of this world)
 5. Current State of the World (what's happening now)`;
 
-      const result = await generateWithOpenAI(systemPrompt, userPrompt);
+      const result = await generateWithOpenAI(systemPrompt, userPrompt, generateOptions);
       return NextResponse.json({ result });
     }
 
     if (type === 'chapter') {
       const systemPrompt = `You are a creative writing assistant specializing in novel writing. 
 Write engaging, vivid, and compelling chapter content that maintains consistency with the established 
-story world and characters. Use varied sentence structure, rich descriptions, and meaningful dialogue.`;
+story world and characters. Use varied sentence structure, rich descriptions, and meaningful dialogue.${langInstruction}`;
 
       const context = previousChapters && previousChapters.length > 0
         ? `Previous chapter content:\n${previousChapters.slice(-1)[0]?.content ?? ''}\n\n`
@@ -40,7 +45,7 @@ ${hints ? `Story hints/direction: ${hints}` : ''}
 
 Write a compelling chapter of approximately 600-800 words that advances the story naturally.`;
 
-      const result = await generateWithOpenAI(systemPrompt, userPrompt);
+      const result = await generateWithOpenAI(systemPrompt, userPrompt, generateOptions);
       return NextResponse.json({ result });
     }
 

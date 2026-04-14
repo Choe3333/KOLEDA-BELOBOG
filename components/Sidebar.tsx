@@ -1,6 +1,6 @@
 'use client';
 
-import { Globe, Users, BookOpen, Edit3, Download } from 'lucide-react';
+import { Globe, Users, BookOpen, Edit3, Download, Settings } from 'lucide-react';
 import { useNovelStore } from '@/store/novelStore';
 
 const navItems = [
@@ -9,6 +9,7 @@ const navItems = [
   { id: 'chapters', label: 'Chapters', icon: BookOpen },
   { id: 'edit', label: 'Edit', icon: Edit3 },
   { id: 'export', label: 'Export', icon: Download },
+  { id: 'settings', label: 'Settings', icon: Settings },
 ] as const;
 
 export default function Sidebar() {
