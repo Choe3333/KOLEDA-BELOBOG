@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateWithOpenAI } from '@/lib/openai';
+import { getLanguageInstruction } from '@/lib/language';
 
 export async function POST(req: NextRequest) {
   try {
@@ -11,9 +12,7 @@ export async function POST(req: NextRequest) {
     }
 
     const generateOptions = { apiKey, model, temperature, maxTokens };
-    const langInstruction = language && language !== 'en'
-      ? `\n\nIMPORTANT: Write your response in ${language === 'ko' ? 'Korean' : language === 'ja' ? 'Japanese' : language === 'zh' ? 'Chinese' : language}.`
-      : '';
+    const langInstruction = getLanguageInstruction(language);
 
     if (type === 'rewrite') {
       const systemPrompt = `You are an expert editor and writing coach. Your task is to rewrite and polish text 

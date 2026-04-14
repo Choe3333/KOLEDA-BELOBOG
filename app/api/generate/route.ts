@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateWithOpenAI } from '@/lib/openai';
+import { getLanguageInstruction } from '@/lib/language';
 
 export async function POST(req: NextRequest) {
   try {
@@ -7,9 +8,7 @@ export async function POST(req: NextRequest) {
     const { type, genre, tone, background, title, hints, previousChapters, apiKey, model, temperature, maxTokens, language } = body;
 
     const generateOptions = { apiKey, model, temperature, maxTokens };
-    const langInstruction = language && language !== 'en'
-      ? `\n\nIMPORTANT: Write your response in ${language === 'ko' ? 'Korean' : language === 'ja' ? 'Japanese' : language === 'zh' ? 'Chinese' : language}.`
-      : '';
+    const langInstruction = getLanguageInstruction(language);
 
     if (type === 'world') {
       const systemPrompt = `You are a creative writing assistant specializing in world-building for novels. 

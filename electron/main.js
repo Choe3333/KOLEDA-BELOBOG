@@ -46,7 +46,7 @@ function startServer() {
 
   const serverPath = path.join(process.resourcesPath, 'standalone', 'server.js');
 
-  const child = spawn(process.execPath.includes('electron') ? 'node' : process.execPath, [serverPath], {
+  const child = spawn('node', [serverPath], {
     env: {
       ...process.env,
       PORT: String(PORT),

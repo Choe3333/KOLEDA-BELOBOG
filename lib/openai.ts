@@ -28,12 +28,12 @@ export async function generateWithOpenAI(
 
   try {
     const response = await client.chat.completions.create({
-      model: options.model || 'gpt-4o',
+      model: options.model ?? 'gpt-4o',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
       ],
-      max_tokens: options.maxTokens || 1500,
+      max_tokens: options.maxTokens ?? 1500,
       temperature: options.temperature ?? 0.8,
     });
 
